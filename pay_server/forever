@@ -1,0 +1,8 @@
+rm -rf /root/.forever/forever.log
+rm -rf forever.log
+rm -rf out.log
+rm -rf err.log
+touch forever.log
+touch out.log
+touch err.log
+forever start -a forever.log -o out.log -e err.log main.js
