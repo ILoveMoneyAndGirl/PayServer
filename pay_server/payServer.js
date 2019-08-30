@@ -191,7 +191,9 @@ app.on('request', function (req, res) {
 
                   //挑选合适二维码（离目标金额最近，定值二维码优先）
                   for (var i = 0; i < data.url.length; i++) {
-        
+                      
+                      console.log(data.url[i])
+
                       if(data.url[i].channel==msg.channel&&!PAYURL_CACHE[msg.appId][data.url[i]._id]){
                       
                         if(data.url.isAny&& isAnyIndex<0){
