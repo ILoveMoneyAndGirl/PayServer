@@ -30,7 +30,7 @@
 
 // console.log(new Date())
 
-const {PayUrl,DB} = require('./models');
+// const {PayUrl,DB} = require('./models');
 
 // PayUrl.aggregate([{"$group": {"_id": '$tag'}},{"$group": {"channel": '$channel'}},{"$group": {"tagPrice": '$tagPrice'}}]).exec(function(err,reslut){
 //     console.log(reslut)
@@ -41,13 +41,15 @@ const {PayUrl,DB} = require('./models');
 //  })
 
 
-PayUrl.find().sort({
-                tagPrice:1,price:1
-            }).exec(function(err,reslut){
-    console.log(reslut)
- })
+// PayUrl.find().sort({
+//                 tagPrice:1,price:1
+//             }).exec(function(err,reslut){
+//     console.log(reslut)
+//  })
 
+let s='{"newData":{"price":"5","days":"1","des":"试用会员"},"action":"AddGoods"}'
 
+console.log(s.length)
  // PayUrl.collection.group(
  //    group.tag,
  //    group.channel,

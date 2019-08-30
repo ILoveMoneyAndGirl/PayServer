@@ -5,7 +5,6 @@ const setting = require('../config/setting');
 
 
  mongoose.connect('mongodb://' + setting.USERNAME + ':' + setting.PASSWORD + '@' + setting.HOST + ':' + setting.PORT + '/' + setting.DB + '', {
-        useMongoClient: true
     });
 
 mongoose.Promise = global.Promise;

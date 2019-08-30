@@ -138,7 +138,6 @@ function PostData (data,host,port,path,protocol,count){
     method: 'POST',
     headers: {
        'Content-Type': 'application/x-www-form-urlencoded',
-       'Content-Length': content.length
      }
   };
 
