@@ -168,7 +168,9 @@ app.on('request', function (req, res) {
 
         req.on('end', async function () {
             dataBuffer = decodeURI(dataBuffer)
-            let msg = querystring.parse(dataBuffer);
+            let msg = JSON.parse(dataBuffer);
+             console.log("ORDER:--->RECV:")
+              console.log(msg)
             try{
               let  data =await PayProduct.findOne({_id:msg.appId},{url:1,token:1,adminUser:1,rate:1}).populate([{
                       path: 'url',
@@ -265,12 +267,14 @@ app.on('request', function (req, res) {
                      let st=setTimeout(timeOutDel,time,msg.appId,data.url[index]._id)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
+                    console.log("ORDER:--->")
+                    console.log(JSON.stringify(sendData))
                      res.end(JSON.stringify(sendData))
                   }
                 }else{
                     sendData.error= KeyError
                     sendData.msg= 'key error!'
-                    console.log("ORDER:--->")
+                    console.log("ORDER:--->Error")
                     console.log(JSON.stringify(sendData))
                     res.end(JSON.stringify(sendData))
                 }
