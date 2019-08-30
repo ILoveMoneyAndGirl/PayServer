@@ -270,6 +270,8 @@ app.on('request', function (req, res) {
                 }else{
                     sendData.error= KeyError
                     sendData.msg= 'key error!'
+                    console.log("ORDER:--->")
+                    console.log(JSON.stringify(sendData))
                     res.end(JSON.stringify(sendData))
                 }
               }else {
