@@ -274,13 +274,15 @@ app.on('request', function (req, res) {
                 }else{
                     sendData.error= KeyError
                     sendData.msg= 'key error!'
-                    console.log("ORDER:--->Error")
+                    console.log("key:--->Error")
                     console.log(JSON.stringify(sendData))
                     res.end(JSON.stringify(sendData))
                 }
               }else {
                   sendData.error= InvalidAppId
                   sendData.msg=   'Invalid AppId: ' + msg.appId
+                  console.log("Invalid AppId")
+                  console.log(JSON.stringify(sendData))
                   res.end(JSON.stringify(sendData))
               }
             }catch (err) {
