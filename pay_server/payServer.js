@@ -169,8 +169,6 @@ app.on('request', function (req, res) {
         req.on('end', async function () {
             dataBuffer = decodeURI(dataBuffer)
             let msg = JSON.parse(dataBuffer);
-             console.log("ORDER:--->RECV:")
-              console.log(msg)
             try{
               let  data =await PayProduct.findOne({_id:msg.appId},{url:1,token:1,adminUser:1,rate:1}).populate([{
                       path: 'url',
@@ -189,17 +187,13 @@ app.on('request', function (req, res) {
                   if(!PAYURL_CACHE[msg.appId])
                       PAYURL_CACHE[msg.appId]={}
 
-                     console.log("___________________")
-                     console.log(data.url.length)
 
                   //挑选合适二维码（离目标金额最近，定值二维码优先）
                   for (var i = 0; i < data.url.length; i++) {
                       
-                      console.log(data.url[i])
-
                       if(data.url[i].channel==msg.channel&&!PAYURL_CACHE[msg.appId][data.url[i]._id]){
                       
-                        if(data.url.isAny&& isAnyIndex<0){
+                        if(data.url[i].isAny&& isAnyIndex<0){
                           isAnyIndex=i
                         }else if(data.url[i].tagPrice==msg.price){
                           let min= Math.abs(msg.price-data.url[i].tagPrice)
