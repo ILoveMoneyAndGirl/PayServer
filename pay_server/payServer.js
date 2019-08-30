@@ -189,6 +189,9 @@ app.on('request', function (req, res) {
                   if(!PAYURL_CACHE[msg.appId])
                       PAYURL_CACHE[msg.appId]={}
 
+                     console.log("___________________")
+                     console.log(data.url.length)
+
                   //挑选合适二维码（离目标金额最近，定值二维码优先）
                   for (var i = 0; i < data.url.length; i++) {
                       
