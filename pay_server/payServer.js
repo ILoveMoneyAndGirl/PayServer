@@ -129,7 +129,7 @@ function Notify(notifyUrl,data)
 }
 function PostData (data,host,port,path,protocol,count){
 
-  var content = querystring.stringify(data);
+  var content = JSON.stringify(data);
 
   var options = {
     hostname: host,
@@ -137,7 +137,7 @@ function PostData (data,host,port,path,protocol,count){
     path: path,
     method: 'POST',
     headers: {
-       'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json;charset=utf8',
      }
   };
 
@@ -267,22 +267,16 @@ app.on('request', function (req, res) {
                      let st=setTimeout(timeOutDel,time,msg.appId,data.url[index]._id)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
-                    console.log("ORDER:--->")
-                    console.log(JSON.stringify(sendData))
                      res.end(JSON.stringify(sendData))
                   }
                 }else{
                     sendData.error= KeyError
                     sendData.msg= 'key error!'
-                    console.log("key:--->Error")
-                    console.log(JSON.stringify(sendData))
                     res.end(JSON.stringify(sendData))
                 }
               }else {
                   sendData.error= InvalidAppId
                   sendData.msg=   'Invalid AppId: ' + msg.appId
-                  console.log("Invalid AppId")
-                  console.log(JSON.stringify(sendData))
                   res.end(JSON.stringify(sendData))
               }
             }catch (err) {
@@ -298,7 +292,7 @@ app.on('request', function (req, res) {
         });
         req.on('end', async function () {
             dataBuffer = decodeURI(dataBuffer)
-            let msg = querystring.parse(dataBuffer);
+            let msg = JSON.parse(dataBuffer);
             let  data =await PayProduct.findOne({_id:msg.appId},{token:1})
             if(data&&getAPPNotifyKey(msg,data.token)==msg.key){
               let cache=PAYURL_CACHE[msg.appId]
