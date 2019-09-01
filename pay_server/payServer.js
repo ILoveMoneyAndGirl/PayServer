@@ -91,6 +91,10 @@ function timeOutDel(appId,urlId,price) {
 
   if(data.isAny)
   {
+     console.log("--------------->0")
+     console.log(data[price])
+     console.log(data[price.toString()])
+
     sendData=data[price].sendData
     token=data[price].token
     notifyUrl==data[price].notifyUrl
