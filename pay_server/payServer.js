@@ -279,7 +279,6 @@ app.on('request', function (req, res) {
                     //发送订单数据 
                     sendData.orderId=msg.orderId;
          
-                    sendData.timeOut=data.url[index].timeOut
                     sendData.isAny=data.url[index].isAny
 
                     if(sendData.isAny){
@@ -351,8 +350,10 @@ app.on('request', function (req, res) {
 
                     //设置超时函数
                     // let time=sendData.timeOut*60*1000
-                     let time=20*1000
-                     let st=setTimeout(timeOutDel,time,msg.appId,data.url[index]._id,sendData.realPrice)
+                     //let time=20*1000
+                      sendData.timeOut=data.url[index].timeOut*60*1000
+                      sendData.timeOut=20*1000
+                     let st=setTimeout(timeOutDel,sendData.timeOut,msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
                      console.log("OrderData--------------->")
