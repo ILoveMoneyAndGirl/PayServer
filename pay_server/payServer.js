@@ -79,6 +79,11 @@ let app = http.createServer();
 function timeOutDel(appId,urlId,price) {
   //发送数据 表示超时
   let data= PAYURL_CACHE[appId][urlId]
+
+
+  console.log("timeOutDel---->")
+  console.log(data)
+
   let sendData={}
   let token=""
   let notifyUrl=""
@@ -177,6 +182,10 @@ function Notify(notifyUrl,data)
 function PostData (data,host,port,path,protocol,count){
 
   var content = JSON.stringify(data);
+
+  console.log("PostData---->")
+    console.log(content)
+
 
   var options = {
     hostname: host,
@@ -332,7 +341,7 @@ app.on('request', function (req, res) {
                               isAny:sendData.isAny
                              }
                       }
-                      PAYURL_CACHE[msg.appId][data.url[index]._id][sendData.realPrice]=cacheData
+                        PAYURL_CACHE[msg.appId][data.url[index]._id][sendData.realPrice]=cacheData
                     }else
                     {
                         PAYURL_CACHE[msg.appId][data.url[index]._id]=cacheData
