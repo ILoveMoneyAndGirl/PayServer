@@ -100,7 +100,8 @@ function timeOutDel(appId,urlId,price) {
     notifyUrl==data[price].notifyUrl
   }
   else
-  {
+  {  console.log("----XXXXXXXX---------->")
+
     sendData=data.sendData
     token=data.data
     notifyUrl=data.notifyUrl
