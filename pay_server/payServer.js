@@ -124,17 +124,17 @@ function cmp(a,b){
 function getAnyPrice(price,appId,tag,channel){
 
   let priceData=PAYURL_CACHE[appId]
-
+  price=price.toFixed(2)
   for(var i in priceData) {
       if(priceData[i].tag==tag&& priceData[i].channel==channel){
 
           if(priceData[i].isAny){
               if(priceData[i][price]){
-                return getAnyPrice((price-isAnyPriceChange).toFixed(2),appId,tag,channel)
+                return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
               }
 
            }else if(priceData[i].sendData.income==price){
-              return getAnyPrice((price-isAnyPriceChange).toFixed(2),appId,tag,channel)
+              return getAnyPrice(price-isAnyPriceChange),appId,tag,channel)
            }
       }
     }
@@ -283,7 +283,8 @@ app.on('request', function (req, res) {
                     sendData.isAny=data.url[index].isAny
 
                     if(sendData.isAny){
-                        let realPrice=getAnyPrice((msg.price-isAnyPriceChange).toFixed(2),msg.appId,data.url[index].tag,data.url[index].channel)
+                        let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
+                        console.log(realPrice)
                         realPrice=realPrice.toFixed(2)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
