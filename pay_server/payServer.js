@@ -70,7 +70,8 @@ const QRCodeError=4
 const InsufficientBalance=5
 
 const PostCount=0
-const isAnyPriceChange=0.5
+const isAnyPriceChange=1
+const isAnyMax=3
 
 //2.创建服务器
 let app = http.createServer();
@@ -285,6 +286,16 @@ app.on('request', function (req, res) {
                         let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
+
+                        if(isAnyMax<(msg.price-realPrice)||realPrice<=0)
+                        {
+                            sendData.error= QRCodeError
+                            sendData.msg= 'No valid QRCode Found'
+                            res.end(JSON.stringify(sendData))
+                            return 
+                        }
+
+
 
                     }else
                     {
