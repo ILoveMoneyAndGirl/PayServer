@@ -130,11 +130,11 @@ function getAnyPrice(price,appId,tag,channel){
 
           if(priceData[i].isAny){
               if(priceData[i][price]){
-                return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
+                return getAnyPrice((price-isAnyPriceChange).toFixed(2),appId,tag,channel)
               }
 
            }else if(priceData[i].sendData.income==price){
-              return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
+              return getAnyPrice((price-isAnyPriceChange).toFixed(2),appId,tag,channel)
            }
       }
     }
@@ -224,6 +224,8 @@ app.on('request', function (req, res) {
             let  sendData={}
             dataBuffer = decodeURI(dataBuffer)
             let msg = JSON.parse(dataBuffer);
+            console.log("ORDER:")
+            console.log(msg)
             try{
               let  data =await PayProduct.findOne({_id:msg.appId},{url:1,token:1,adminUser:1,rate:1}).populate([{
                       path: 'url',
@@ -281,7 +283,7 @@ app.on('request', function (req, res) {
                     sendData.isAny=data.url[index].isAny
 
                     if(sendData.isAny){
-                        let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
+                        let realPrice=getAnyPrice((msg.price-isAnyPriceChange).toFixed(2),msg.appId,data.url[index].tag,data.url[index].channel)
                         realPrice=realPrice.toFixed(2)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
