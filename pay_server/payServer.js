@@ -353,8 +353,8 @@ app.on('request', function (req, res) {
                      let st=setTimeout(timeOutDel,time,msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
-                     console.log("OrderData")
-                      console.log(JSON.stringify(sendData))
+                     console.log("OrderData--------------->")
+                    console.log(JSON.stringify(sendData))
                      res.end(JSON.stringify(sendData))
                   }
                 }else{
