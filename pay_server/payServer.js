@@ -380,7 +380,7 @@ app.on('request', function (req, res) {
                   sendData.msg=   'Invalid AppId: ' + msg.appId
                   res.end(JSON.stringify(sendData))
               }
-            }catch (err) {
+            }catch (error) {
                console.log("--------------error_0")
                console.log(error)
             }
