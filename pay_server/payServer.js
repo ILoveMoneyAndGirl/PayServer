@@ -59,6 +59,8 @@ const {PayUrl,PayRecord,PayProduct,AdminUserBalance} = require('./models');
 
 let PAYURL_CACHE={}
 let TIMEOUT_CACHE={}
+let ANYPAY_MIN={}
+
 
 const InvalidAppId=0
 const InvalidRoute=1
@@ -68,25 +70,70 @@ const QRCodeError=4
 const InsufficientBalance=5
 
 const PostCount=0
+const isAnyPriceChange=0.5
 
 //2.创建服务器
 let app = http.createServer();
 
 
-function timeOutDel(appId,urlId) {
+function timeOutDel(appId,urlId,price) {
   //发送数据 表示超时
-  let sendData= PAYURL_CACHE[appId][urlId].sendData
+  let data= PAYURL_CACHE[appId][urlId]
+  let sendData={}
+  let token=""
+  let notifyUrl=""
+
+  if(data.isAny)
+  {
+    sendData=data[price].sendData
+    token=data[price].token
+    notifyUrl==data[price].notifyUrl
+  }
+  else
+  {
+    sendData=data.sendData
+    token=data.data
+    notifyUrl=data.notifyUrl
+  }
+
   sendData.code=1
   sendData.income=0
   sendData.takeOff=0
+  sendData.key=notifyMsg(sendData,token)
 
-  sendData.key=notifyMsg(sendData,PAYURL_CACHE[appId][urlId].token)
-  Notify(PAYURL_CACHE[appId][urlId].notifyUrl,sendData)
-  delete PAYURL_CACHE[appId][urlId]
+  //通知客户
+  Notify(notifyUrl,sendData)
+
+  if(data.isAny)
+     delete PAYURL_CACHE[appId][urlId][price]
+  else
+     delete PAYURL_CACHE[appId][urlId]
 }
 
 function cmp(a,b){
   return a.price-b.price
+}
+
+//获取任意价格二维码 定价
+function getAnyPrice(price,appId,tag,channel){
+
+  let priceData=PAYURL_CACHE[appId]
+
+  for(var i in priceData) {
+      if(priceData[i].tag==tag&& priceData[i].channel==channel){
+
+          if(priceData[i].isAny){
+              if(priceData[price]){
+                return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
+              }
+
+           }else if(priceData[i].sendData.income==price){
+              return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
+           }
+      }
+    }
+
+    return price
 }
 
 //发起订单
@@ -157,7 +204,6 @@ function PostData (data,host,port,path,protocol,count){
 //3.添加响应事件
 app.on('request', function (req, res) {
 
-    let  sendData={}
     //1.通过判断url路径和请求方式来判断是否是表单提交
     if (req.url === '/order' && req.method === 'POST') {//下单
         let dataBuffer = '';
@@ -167,6 +213,7 @@ app.on('request', function (req, res) {
         });
 
         req.on('end', async function () {
+            let  sendData={}
             dataBuffer = decodeURI(dataBuffer)
             let msg = JSON.parse(dataBuffer);
             try{
@@ -191,11 +238,12 @@ app.on('request', function (req, res) {
                   //挑选合适二维码（离目标金额最近，定值二维码优先）
                   for (var i = 0; i < data.url.length; i++) {
                       
-                      if(data.url[i].channel==msg.channel&&!PAYURL_CACHE[msg.appId][data.url[i]._id]){
+                      //需要处理
+                      if(data.url[i].channel==msg.channel){
                       
                         if(data.url[i].isAny&& isAnyIndex<0){
                           isAnyIndex=i
-                        }else if(data.url[i].tagPrice==msg.price){
+                        }else if(data.url[i].tagPrice==msg.price&&!PAYURL_CACHE[msg.appId][data.url[i]._id]){
                           let min= Math.abs(msg.price-data.url[i].tagPrice)
                           if(minPrice>min){
                             index=i;
@@ -221,12 +269,27 @@ app.on('request', function (req, res) {
 
                     //发送订单数据 
                     sendData.orderId=msg.orderId;
-                    sendData.price=data.url[index].tagPrice
-                    sendData.realPrice=data.url[index].price
+         
                     sendData.timeOut=data.url[index].timeOut
                     sendData.isAny=data.url[index].isAny
+
+                    if(sendData.isAny){
+                        let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
+                        sendData.price=msg.price
+                        sendData.realPrice=realPrice
+
+                    }else
+                    {
+                      sendData.price=data.url[index].tagPrice
+                      sendData.realPrice=data.url[index].price
+                    }
+
                     sendData.qrCode=data.url[index].url
                     sendData.key=getSendQRCodeKey(sendData,data.token)
+
+                      let takeOff=data.rate*sendData.realPrice
+                     takeOff=takeOff.toFixed(3)
+
 
                     //存储订单数据
                       const obj = {
@@ -241,29 +304,44 @@ app.on('request', function (req, res) {
                      let info= await newObj.save()
 
                       //缓存订单数据
-                     let takeOff=data.rate*data.url[index].price
-                     takeOff=takeOff.toFixed(3)
                      const cacheData={
                        tag:data.url[index].tag,
                        notifyUrl:msg.notifyUrl,
                        token:data.token,
+                       isAny:sendData.isAny,
+                       channel:data.url[index].channel,
                        sendData:{
                           id:info._id,
                           orderId:msg.orderId,
                           uId:msg.uId,
                           goodsName:msg.goodsName,
-                          income:data.url[index].price,
+                          income:sendData.realPrice
                           takeOff:takeOff,
                           code:0,
                           channel:data.url[index].channel,
                        }
                      }
-                  PAYURL_CACHE[msg.appId][data.url[index]._id]=cacheData
+              
+                    if(sendData.isAny)
+                    {
+                      if(!PAYURL_CACHE[msg.appId][data.url[index]._id])
+                      {
+                        PAYURL_CACHE[msg.appId][data.url[index]._id]={
+                              tag:data.url[index].tag,
+                              channel:data.url[index].channel,
+                              isAny:sendData.isAny
+                             }
+                      }
+                      PAYURL_CACHE[msg.appId][data.url[index]._id][sendData.realPrice]=cacheData
+                    }else
+                    {
+                        PAYURL_CACHE[msg.appId][data.url[index]._id]=cacheData
+                    }
 
                     //设置超时函数
                     // let time=sendData.timeOut*60*1000
                      let time=20*1000
-                     let st=setTimeout(timeOutDel,time,msg.appId,data.url[index]._id)
+                     let st=setTimeout(timeOutDel,time,msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
                      res.end(JSON.stringify(sendData))
@@ -297,37 +375,61 @@ app.on('request', function (req, res) {
               let cache=PAYURL_CACHE[msg.appId]
             
               for(let i in cache) {
-                  if(cache[i].sendData.channel==msg.channel&&cache[i].tag==msg.tag&&cache[i].sendData.income==msg.price){
-                    //清除定时器
-                    clearTimeout(TIMEOUT_CACHE[cache[i].sendData.id])
-                    //更新订单信息
-                    try{
-                        await PayRecord.findOneAndUpdate({_id: cache[i].sendData.id},{
-                            $set: {
-                              state:2,
-                              takeOff:cache[i].sendData.takeOff,
-                              flishDate:Date.now(),
-                            }
-                        });
+                  if(cache[i].channel==msg.channel&&cache[i].tag==msg.tag){
 
-                      //通知客户
-                      cache[i].sendData.key=notifyMsg(cache[i].sendData,data.token)
-                      Notify(cache[i].notifyUrl,cache[i].sendData)
-                    //更新缓存
-                      delete PAYURL_CACHE[msg.appId][i]
-                       res.end(JSON.stringify({
-                          code:0
-                       }))
+                    let orderId=""
+                    let sendData=null
+                    let notifyUrl=""
+                    let 
+                    if(cache[i].isAny){
+                      if(cache[i][msg.price]){
+                          sendData=cache[i][msg.price].sendData
+                          notifyUrl=cache[i][msg.price].notifyUrl
+                      }
+                    }
+                    else if(cache[i].sendData.income==msg.price)
+                    {
+                        sendData=cache[i].sendData
+                        notifyUrl=cache[i].notifyUrl
+                    }
+                    if(sendData)
+                    {
+                      //清除定时器
+                      clearTimeout(TIMEOUT_CACHE[sendData.id])
+                      //更新订单信息
+                      try{
+                          await PayRecord.findOneAndUpdate({_id: sendData.id},{
+                              $set: {
+                                state:2,
+                                takeOff:sendData.takeOff,
+                                flishDate:Date.now(),
+                                income:sendData.income,
+                              }
+                          });
 
-                      return 
+                        //通知客户
+                        cache[i].sendData.key=notifyMsg(sendData,data.token)
+                        Notify(notifyUrl,sendData)
+                      //更新缓存
+                      if(cache[i].isAny)
+                           delete PAYURL_CACHE[msg.appId][i][msg.price]
+                      else
+                          delete PAYURL_CACHE[msg.appId][i]
 
-                    }catch(error){
-                       res.end(JSON.stringify({
-                          code:1
-                       }))
-                      console.log("--------------------error1")
-                      console.log(error)
-                      return 
+                         res.end(JSON.stringify({
+                            code:0
+                         }))
+
+                        return 
+
+                      }catch(error){
+                         res.end(JSON.stringify({
+                            code:1
+                         }))
+                        console.log("--------------------error1")
+                        console.log(error)
+                        return 
+                      }
                     }
  
                   }
