@@ -128,7 +128,7 @@ function getAnyPrice(price,appId,tag,channel){
       if(priceData[i].tag==tag&& priceData[i].channel==channel){
 
           if(priceData[i].isAny){
-              if(priceData[price]){
+              if(priceData[i][price]){
                 return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
               }
 
