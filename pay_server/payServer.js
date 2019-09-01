@@ -108,6 +108,8 @@ function timeOutDel(appId,urlId,price) {
   sendData.key=notifyMsg(sendData,token)
 
   //通知客户
+  console.log("--------------->")
+  console.log(notifyUrl)
   Notify(notifyUrl,sendData)
 
   if(data.isAny)
