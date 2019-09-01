@@ -70,7 +70,7 @@ const QRCodeError=4
 const InsufficientBalance=5
 
 const PostCount=0
-const isAnyPriceChange=1
+const isAnyPriceChange=0.1
 const isAnyMax=3
 
 //2.创建服务器
