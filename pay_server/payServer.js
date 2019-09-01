@@ -170,6 +170,9 @@ function notifyMsg(msg,token){
 
 function Notify(notifyUrl,data)
 {
+    console.log("notifyUrl----->")
+
+  console.log(notifyUrl)
   let serverInfo =url.parse(notifyUrl)
     let port=80
     let protocol=http
