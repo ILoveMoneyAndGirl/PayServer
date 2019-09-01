@@ -166,8 +166,7 @@ function notifyMsg(msg,token){
 
 function Notify(notifyUrl,data)
 {
-  console.log("notifyUrl----->")
-  console.log(notifyUrl)
+
   let serverInfo =url.parse(notifyUrl)
     let port=80
     let protocol=http
@@ -175,10 +174,14 @@ function Notify(notifyUrl,data)
         port=serverInfo.port
     if(serverInfo.protocol=='https:'){
         protocol=https
+        console.log("https:-->")
     }
     PostData(data,serverInfo.hostname,port,serverInfo.path,protocol,0)
 }
 function PostData (data,host,port,path,protocol,count){
+
+    console.log("PostData----->")
+  console.log(data,host,port,path)
 
   var content = JSON.stringify(data);
 
