@@ -255,7 +255,7 @@ app.on('request', function (req, res) {
                         if(data.url[i].isAny&& isAnyIndex<0){
                           isAnyIndex=i
                         }else if(data.url[i].tagPrice==msg.price&&!PAYURL_CACHE[msg.appId][data.url[i]._id]){
-                          let min= Math.abs(msg.price-data.url[i].tagPrice)
+                          let min= Math.abs(data.url[i].tagPrice-data.url[i].price)
                           if(minPrice>min){
                             index=i;
                             minPrice=min;
@@ -285,7 +285,6 @@ app.on('request', function (req, res) {
 
                     if(sendData.isAny){
                         let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
-                        console.log(realPrice)
                         realPrice=parseFloat(realPrice).toFixed(2)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
