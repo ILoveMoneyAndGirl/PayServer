@@ -80,28 +80,18 @@ let app = http.createServer();
 function timeOutDel(appId,urlId,price) {
   //发送数据 表示超时
   let data= PAYURL_CACHE[appId][urlId]
-
-
-  console.log("timeOutDel---->",price)
-  console.log(data)
-
   let sendData={}
   let token=""
   let notifyUrl=""
 
   if(data.isAny)
   {
-     console.log("--------------->0")
-     console.log(data[price])
-     console.log(data[price.toString()])
-
     sendData=data[price].sendData
     token=data[price].token
-    notifyUrl==data[price].notifyUrl
+    notifyUrl=data[price].notifyUrl
   }
   else
-  {  console.log("----XXXXXXXX---------->")
-
+  {  
     sendData=data.sendData
     token=data.data
     notifyUrl=data.notifyUrl
@@ -113,8 +103,7 @@ function timeOutDel(appId,urlId,price) {
   sendData.key=notifyMsg(sendData,token)
 
   //通知客户
-  console.log("--------------->")
-  console.log(notifyUrl)
+
   Notify(notifyUrl,sendData)
 
   if(data.isAny)
@@ -177,8 +166,7 @@ function notifyMsg(msg,token){
 
 function Notify(notifyUrl,data)
 {
-    console.log("notifyUrl----->")
-
+  console.log("notifyUrl----->")
   console.log(notifyUrl)
   let serverInfo =url.parse(notifyUrl)
     let port=80
