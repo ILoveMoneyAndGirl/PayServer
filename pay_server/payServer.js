@@ -134,7 +134,7 @@ function getAnyPrice(price,appId,tag,channel){
               }
 
            }else if(priceData[i].sendData.income==price){
-              return getAnyPrice(price-isAnyPriceChange),appId,tag,channel)
+              return getAnyPrice(price-isAnyPriceChange,appId,tag,channel)
            }
       }
     }
