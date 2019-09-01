@@ -124,7 +124,7 @@ function cmp(a,b){
 function getAnyPrice(price,appId,tag,channel){
 
   let priceData=PAYURL_CACHE[appId]
-  price=price.toFixed(2)
+  price=parseFloat(price).toFixed(2)
   for(var i in priceData) {
       if(priceData[i].tag==tag&& priceData[i].channel==channel){
 
@@ -285,7 +285,7 @@ app.on('request', function (req, res) {
                     if(sendData.isAny){
                         let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
                         console.log(realPrice)
-                        realPrice=realPrice.toFixed(2)
+                        realPrice=parseFloat(realPrice).toFixed(2)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
 
@@ -307,7 +307,7 @@ app.on('request', function (req, res) {
                     sendData.key=getSendQRCodeKey(sendData,data.token)
 
                       let takeOff=data.rate*sendData.realPrice
-                     takeOff=takeOff.toFixed(3)
+                     takeOff=parseFloat(takeOff).toFixed(3)
 
 
                     //存储订单数据
@@ -407,7 +407,7 @@ app.on('request', function (req, res) {
                     let notifyUrl=""
                     let 
                     if(cache[i].isAny){
-                      let key=msg.price.toFixed(2)
+                      let key=parseFloat(msg.price).toFixed(2)
                       if(cache[i][key]){
                           sendData=cache[i][key].sendData
                           notifyUrl=cache[i][key].notifyUrl
