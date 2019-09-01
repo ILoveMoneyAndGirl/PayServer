@@ -312,6 +312,8 @@ app.on('request', function (req, res) {
                      const newObj = new PayRecord(obj)
                      let info= await newObj.save()
 
+                     sendData.id=info._id
+
                       //缓存订单数据
                      const cacheData={
                        tag:data.url[index].tag,
