@@ -82,7 +82,7 @@ function timeOutDel(appId,urlId,price) {
   let data= PAYURL_CACHE[appId][urlId]
 
 
-  console.log("timeOutDel---->")
+  console.log("timeOutDel---->",price)
   console.log(data)
 
   let sendData={}
@@ -184,10 +184,6 @@ function PostData (data,host,port,path,protocol,count){
 
   var content = JSON.stringify(data);
 
-  console.log("PostData---->")
-    console.log(content)
-
-
   var options = {
     hostname: host,
     port: port,
@@ -200,6 +196,8 @@ function PostData (data,host,port,path,protocol,count){
 
   var req = protocol.request(options);
   req.on('error', function (e) {
+    console.log("POST ERROR")
+    console.log(e)
     if(count<1)
         PostData(data,host,port,path,protocol,count+1)
   });
@@ -366,8 +364,8 @@ app.on('request', function (req, res) {
                      let st=setTimeout(timeOutDel,sendData.timeOut,msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
-                     console.log("OrderData--------------->")
-                    console.log(JSON.stringify(sendData))
+                    //  console.log("OrderData--------------->")
+                    // console.log(JSON.stringify(sendData))
                      res.end(JSON.stringify(sendData))
                   }
                 }else{
