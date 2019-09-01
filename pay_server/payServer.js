@@ -70,7 +70,7 @@ const QRCodeError=4
 const InsufficientBalance=5
 
 const PostCount=0
-const isAnyPriceChange=0.1
+const isAnyPriceChange=0.02
 const isAnyMax=3
 
 //2.创建服务器
@@ -284,7 +284,7 @@ app.on('request', function (req, res) {
 
                     if(sendData.isAny){
                         let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
-                        //realPrice=realPrice.toFixed(2)
+                        realPrice=realPrice.toFixed(2)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
 
@@ -295,8 +295,6 @@ app.on('request', function (req, res) {
                             res.end(JSON.stringify(sendData))
                             return 
                         }
-
-
 
                     }else
                     {
@@ -408,9 +406,10 @@ app.on('request', function (req, res) {
                     let notifyUrl=""
                     let 
                     if(cache[i].isAny){
-                      if(cache[i][msg.price]){
-                          sendData=cache[i][msg.price].sendData
-                          notifyUrl=cache[i][msg.price].notifyUrl
+                      let key=msg.price.toFixed(2)
+                      if(cache[i][key]){
+                          sendData=cache[i][key].sendData
+                          notifyUrl=cache[i][key].notifyUrl
                       }
                     }
                     else if(cache[i].sendData.income==msg.price)
