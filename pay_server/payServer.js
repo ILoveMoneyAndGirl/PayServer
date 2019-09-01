@@ -284,7 +284,7 @@ app.on('request', function (req, res) {
 
                     if(sendData.isAny){
                         let realPrice=getAnyPrice(msg.price-isAnyPriceChange,msg.appId,data.url[index].tag,data.url[index].channel)
-                        realPrice=realPrice.toFixed(2)
+                        //realPrice=realPrice.toFixed(2)
                         sendData.price=msg.price
                         sendData.realPrice=realPrice
 
