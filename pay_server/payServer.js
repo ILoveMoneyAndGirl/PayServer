@@ -315,7 +315,7 @@ app.on('request', function (req, res) {
                           orderId:msg.orderId,
                           uId:msg.uId,
                           goodsName:msg.goodsName,
-                          income:sendData.realPrice
+                          income:sendData.realPrice,
                           takeOff:takeOff,
                           code:0,
                           channel:data.url[index].channel,
