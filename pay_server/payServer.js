@@ -421,6 +421,8 @@ app.on('request', function (req, res) {
         req.on('end', async function () {
             dataBuffer = decodeURI(dataBuffer)
             let msg = JSON.parse(dataBuffer);
+            console.log("__________________> pay back--》")
+            console.log(msg)
             let  data =await PayProduct.findOne({_id:msg.appId},{token:1})
             if(data&&getAPPNotifyKey(msg,data.token)==msg.key){
               let cache=PAYURL_CACHE[msg.appId]
