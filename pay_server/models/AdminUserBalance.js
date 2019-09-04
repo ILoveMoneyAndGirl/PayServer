@@ -11,7 +11,7 @@ var AdminUserBalanceSchema = new Schema({
     money:Number, //余额
     createDate: Date,
     adminUser: String,
-    tryMinute: Number,
+    tryDay: Number,
 
     tryAmountMoney: Number,//试用金额,
     state:Number,// 0永久免费，1普通用户

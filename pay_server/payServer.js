@@ -241,6 +241,26 @@ app.on('request', function (req, res) {
                   let minPrice=100000000;
                   let isAnyIndex=-1;
 
+
+                // //判断余额 是否能够下单
+                // let userInfo=await AdminUserBalance.findOne({adminUser:data.adminUser})
+                // if(userInfo.state==1)
+                // {
+                //     let now=new Date()
+                //     let deadLine=userInfo.createDate
+                //     deadLine.setDate(deadLine.getDate()+userInfo.tryDay);
+                //     if((now-deadLine)>0&&(userInfo.money<-userInfo.tryAmountMoney))
+                //     {
+                //         sendData.error= InsufficientBalance
+                //         sendData.msg= 'Insufficient Balance'
+                //         res.end(JSON.stringify(sendData))
+                //         return 
+                //     }
+                // }
+
+
+
+
                   //创建缓存
                   if(!PAYURL_CACHE[msg.appId])
                       PAYURL_CACHE[msg.appId]={}
@@ -318,6 +338,12 @@ app.on('request', function (req, res) {
                           adminUser: data.adminUser,
                           callBackUrl:msg.notifyUrl,
                           orderId: msg.orderId,
+                          income:sendData.realPrice,
+                          takeOff:takeOff,
+                          goodsName:msg.goodsName,
+                          uId:msg.uId,
+                          appToken:data.token,
+                          channel:data.url[index].channel,
                       }
                      const newObj = new PayRecord(obj)
                      let info= await newObj.save()
@@ -363,8 +389,8 @@ app.on('request', function (req, res) {
                     // let time=sendData.timeOut*60*1000
                      //let time=20*1000
                       sendData.timeOut=data.url[index].timeOut*60*1000
-                      sendData.timeOut=20*1000
-                     let st=setTimeout(timeOutDel,sendData.timeOut,msg.appId,data.url[index]._id,sendData.realPrice)
+                      //sendData.timeOut=20*1000
+                     let st=setTimeout(timeOutDel,(sendData.timeOut+20*1000),msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
                     //  console.log("OrderData--------------->")
@@ -427,9 +453,7 @@ app.on('request', function (req, res) {
                           await PayRecord.findOneAndUpdate({_id: sendData.id},{
                               $set: {
                                 state:2,
-                                takeOff:sendData.takeOff,
                                 flishDate:Date.now(),
-                                income:sendData.income,
                               }
                           });
 
