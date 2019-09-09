@@ -242,21 +242,21 @@ app.on('request', function (req, res) {
                   let isAnyIndex=-1;
 
 
-                // //判断余额 是否能够下单
-                // let userInfo=await AdminUserBalance.findOne({adminUser:data.adminUser})
-                // if(userInfo.state==1)
-                // {
-                //     let now=new Date()
-                //     let deadLine=userInfo.createDate
-                //     deadLine.setDate(deadLine.getDate()+userInfo.tryDay);
-                //     if((now-deadLine)>0&&(userInfo.money<-userInfo.tryAmountMoney))
-                //     {
-                //         sendData.error= InsufficientBalance
-                //         sendData.msg= 'Insufficient Balance'
-                //         res.end(JSON.stringify(sendData))
-                //         return 
-                //     }
-                // }
+                //判断余额 是否能够下单
+                let userInfo=await AdminUserBalance.findOne({adminUser:data.adminUser})
+                if(userInfo.state==1)
+                {
+                    let now=new Date()
+                    let deadLine=userInfo.createDate
+                    deadLine.setDate(deadLine.getDate()+userInfo.tryDay);
+                    if((now-deadLine)>0&&(userInfo.money<-userInfo.tryAmountMoney))
+                    {
+                        sendData.error= InsufficientBalance
+                        sendData.msg= 'Insufficient Balance'
+                        res.end(JSON.stringify(sendData))
+                        return 
+                    }
+                }
 
 
 
