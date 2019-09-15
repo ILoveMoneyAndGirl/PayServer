@@ -158,6 +158,7 @@ function getAPPNotifyKey(msg,token){
 }
 //通知客户
 function notifyMsg(msg,token){
+  console.log(mgs,token)
     let md5 = crypto.createHash('md5');
     let str=msg.id+msg.orderId+msg.uId+msg.goodsName+msg.income+msg.takeOff+msg.code+msg.channel+token
     return md5.update(str).digest('hex');
