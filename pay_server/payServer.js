@@ -468,9 +468,13 @@ app.on('request', function (req, res) {
                               }
                           });
 
+                          console.log("1")
+
                         //通知客户
                         cache[i].sendData.key=notifyMsg(sendData,data.token)
+                          console.log("2")
                         Notify(notifyUrl,sendData)
+                           console.log("3")
                       //更新缓存
                       if(cache[i].isAny)
                            delete PAYURL_CACHE[msg.appId][i][msg.price]
