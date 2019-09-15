@@ -9,7 +9,7 @@ const setting = require('../config/setting');
 
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
-
+ mongoose.set('useFindAndModify', false)
 db.once('open', () => {
     console.log('connect mongodb success')
 })
