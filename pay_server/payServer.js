@@ -431,6 +431,7 @@ app.on('request', function (req, res) {
                                     console.log("__________________> pay back--》000")
 
               for(let i in cache) {
+                  console.log("__________________> pay back--》000",cache[i].channel,cache[i].tag)
                   if(cache[i].channel==msg.channel&&cache[i].tag==msg.tag){
 
                     let orderId=""
@@ -439,9 +440,14 @@ app.on('request', function (req, res) {
                     let 
                     if(cache[i].isAny){
                       let key=parseFloat(msg.price).toFixed(2)
+                       console.log("__________________> pay back--》000",key)
                       if(cache[i][key]){
                           sendData=cache[i][key].sendData
                           notifyUrl=cache[i][key].notifyUrl
+                      }else{
+                                               console.log("__________________> pay back--Code:4",key)
+
+                         res.end(JSON.stringify({code:4}))
                       }
                     }
                     else if(cache[i].sendData.income==msg.price)
