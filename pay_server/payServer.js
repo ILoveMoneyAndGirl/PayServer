@@ -472,7 +472,7 @@ app.on('request', function (req, res) {
                           console.log("1")
 
                         //通知客户
-                        cache[i].sendData.key=notifyMsg(sendData,data.token)
+                       sendData.key=notifyMsg(sendData,data.token)
                           console.log("2")
                         Notify(notifyUrl,sendData)
                            console.log("3")
