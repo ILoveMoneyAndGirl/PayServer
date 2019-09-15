@@ -492,8 +492,8 @@ app.on('request', function (req, res) {
                          res.end(JSON.stringify({
                             code:1
                          }))
-                        // console.log("--------------------error1")
-                        // console.log(error)
+                        console.log("--------------------error1")
+                        console.log(error)
                         return 
                       }
                     }
