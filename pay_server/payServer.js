@@ -437,7 +437,6 @@ app.on('request', function (req, res) {
                     let orderId=""
                     let sendData=null
                     let notifyUrl=""
-                    let 
                     if(cache[i].isAny){
                       let key=parseFloat(msg.price).toFixed(2)
                        console.log("__________________> pay back--》000",key)
