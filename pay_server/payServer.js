@@ -421,14 +421,14 @@ app.on('request', function (req, res) {
         req.on('end', async function () {
             dataBuffer = decodeURI(dataBuffer)
             let msg = JSON.parse(dataBuffer);
-            // console.log("__________________> pay back--》")
-            // console.log(msg)
+            console.log("__________________> pay back--》")
+            console.log(msg)
             let  data =await PayProduct.findOne({_id:msg.appId},{token:1})
-                        // console.log("__________________> pay back--》",data)
+                        console.log("__________________> pay back--》",data)
 
             if(data&&getAPPNotifyKey(msg,data.token)==msg.key){
               let cache=PAYURL_CACHE[msg.appId]
-                                    // console.log("__________________> pay back--》000")
+                                    console.log("__________________> pay back--》000")
 
               for(let i in cache) {
                   if(cache[i].channel==msg.channel&&cache[i].tag==msg.tag){
