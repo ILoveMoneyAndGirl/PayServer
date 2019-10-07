@@ -283,6 +283,7 @@ app.on('request', function (req, res) {
                           // }
 
                           index=i;
+                          break
                         }
                       }
                   }
