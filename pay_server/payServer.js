@@ -276,11 +276,13 @@ app.on('request', function (req, res) {
                         if(data.url[i].isAny&& isAnyIndex<0){
                           isAnyIndex=i
                         }else if(data.url[i].tagPrice==msg.price&&!PAYURL_CACHE[msg.appId][data.url[i]._id]){
-                          let min= Math.abs(data.url[i].tagPrice-data.url[i].price)
-                          if(minPrice>min){
-                            index=i;
-                            minPrice=min;
-                          }
+                          // let min= Math.abs(data.url[i].tagPrice-data.url[i].price)
+                          // if(minPrice>min){
+                          //   index=i;
+                          //   minPrice=min;
+                          // }
+
+                          index=i;
                         }
                       }
                   }
