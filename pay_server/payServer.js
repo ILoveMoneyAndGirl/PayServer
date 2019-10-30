@@ -78,6 +78,8 @@ let app = http.createServer();
 
 
 function timeOutDel(appId,urlId,price) {
+
+  console.log("timeOutDel--------------->1")
   //发送数据 表示超时
   let data= PAYURL_CACHE[appId][urlId]
   let sendData={}
@@ -394,7 +396,7 @@ app.on('request', function (req, res) {
                      //let time=20*1000
                       sendData.timeOut=data.url[index].timeOut*60*1000
                       //sendData.timeOut=20*1000
-                     let st=setTimeout(timeOutDel,(sendData.timeOut+180*1000),msg.appId,data.url[index]._id,sendData.realPrice)
+                     let st=setTimeout(timeOutDel,(sendData.timeOut+2*60*1000),msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
                     //  console.log("OrderData--------------->")
