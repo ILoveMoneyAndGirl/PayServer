@@ -394,7 +394,7 @@ app.on('request', function (req, res) {
                      //let time=20*1000
                       sendData.timeOut=data.url[index].timeOut*60*1000
                       //sendData.timeOut=20*1000
-                     let st=setTimeout(timeOutDel,(sendData.timeOut+20*1000),msg.appId,data.url[index]._id,sendData.realPrice)
+                     let st=setTimeout(timeOutDel,(sendData.timeOut+60*1000),msg.appId,data.url[index]._id,sendData.realPrice)
                      TIMEOUT_CACHE[info._id]=st
                      //发送数据
                     //  console.log("OrderData--------------->")
